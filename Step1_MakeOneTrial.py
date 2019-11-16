@@ -12,33 +12,100 @@ Use this template script to present one trial with your desired structure
 import numpy as np
 import pandas as pd
 import os, sys
+import random
 from psychopy import visual, core, event, gui, logging
 
-# open a white full screen window
-win = visual.Window(fullscr=True, allowGUI=False, color='white', unit='height') 
+#Initialize answer and response arrays
+correct_answer = []
+response = []
 
-# uncomment if you use a clock. Optional because we didn't cover timing this week, 
-# but you can find examples in the tutorial code 
-#trialClock = core.Clock()
+## Begin loop here ##
 
-#%% up to you!
-# this is where you build a trial that you might actually use one day!
-# just try to make one trial ordering your lines of code according to the 
-# sequence of events that happen on one trial
-# if you're stuck you can use the responseExercise.py answer as a starting point 
+# Begin with pre-stim fixation interval 
+win = visual.Window(fullscr=True, 
+                    allowGUI=False, 
+                    color='white', 
+                    unit='height'
+                    ) 
+fixation = visual.GratingStim(win=win, 
+                              size=0.02, 
+                              pos=[0,0], 
+                              sf=0, 
+                              rgb='black')
+fixation.draw()
 
-# maybe start by making stimulus objects (e.g. myPic = visual.ImageStim(...))  
+event.Mouse(visible=False)
 
-# then draw all stimuli
+keys = event.waitKeys(keyList =['space']) # Wait for space bar press to begin trial
 
-# then flip your window
-
-# then record your responses
-
-
-#%% Required clean up
-# this cell will make sure that your window displays for a while and then 
-# closes properly
-
-core.wait(2)
+win.flip()
+core.wait(0.4)
 win.close()
+
+#Present target face image
+win2 = visual.Window(fullscr=True, 
+                    allowGUI=False, 
+                    color='white', 
+                    unit='height'
+                    ) 
+
+event.Mouse(visible=False)
+
+temp = random.randint(1,8)
+file = '/Users/jmsaito/Documents/GitHub/trialloops-jmsaito25/faces/face' + str(temp) + '.jpg'
+current_face = visual.ImageStim(win2, image=file, pos=(0,0))
+
+current_face.draw()
+
+win2.flip()
+core.wait(2)
+win2.close()
+
+#Delay Period
+win3 = visual.Window(fullscr=True, 
+                    allowGUI=False, 
+                    color='white', 
+                    unit='height'
+                    ) 
+
+event.Mouse(visible=False)
+
+win.flip()
+core.wait(3)
+win.close()
+
+#Present probe face
+win4 = visual.Window(fullscr=True, 
+                    allowGUI=False, 
+                    color='white', 
+                    unit='height'
+                    )
+
+event.Mouse(visible=False)
+
+temp2 = random.randint(1,8)
+file = '/Users/jmsaito/Documents/GitHub/trialloops-jmsaito25/faces/face' + str(temp2) + '.jpg'
+current_face = visual.ImageStim(win4, image=file, pos=(0,0))
+
+current_face.draw()
+
+if temp == temp2:
+    correct_answer.append(1)
+else:
+    correct_answer.append(0)
+    
+win4.flip()
+
+#Gather participant same/different response
+keys = event.waitKeys(keyList =['1','0'])
+response.append(keys)
+win4.close()
+
+#End loop with blank screen to indicate end of trial
+win5 = visual.Window(fullscr=True, 
+                    allowGUI=False, 
+                    color='white', 
+                    unit='height'
+                    )
+
+win5.flip()
